@@ -12,15 +12,22 @@ use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
+use Symfony\Component\HttpFoundation\RequestStack;
 
 class ConnexionController extends AbstractController
 {
+    private $requestStack;
+
+    public function __construct(RequestStack $requestStack)
+    {
+        $this->requestStack = $requestStack;
+    }
     /**
      * @Route("/inscription", name="inscription_user", methods={"GET", "POST"})
      */
     public function inscriptionUser(Request $request, ManagerRegistry $doctrine): Response
     {
-
+        
         $errorState = false;
         $errorMessage = "";
         $form = $this->createFormBuilder()
@@ -77,7 +84,21 @@ class ConnexionController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             if ($form["password"]->getData() === $form["password2"]->getData()) {
-                return $this->redirectToRoute('email_send', ['userEmail' => $form["email"]->getData()]);
+                $user = new User();
+                $user->setEmail($form["email"]->getData())
+                    ->setPassword($form["password"]->getData())
+                    ->setPseudo($form["pseudo"]->getData())
+                    ->setNom($form["nom"]->getData())
+                    ->setAge($form["age"]->getData())
+                    ->setPrenom($form["prenom"]->getData())
+                    ->setVille($form["ville"]->getData())
+                    ->setTel($form["tel"]->getData());
+
+                //Add user data to localstorage
+                $session = $this->requestStack->getSession();
+                $session->set('newUser', $user);
+
+                return $this->redirectToRoute('email_send');
             } else {
                 $errorState = true;
                 $errorMessage = "Attention les mots de passes renseignés ne sont pas identiques !";
@@ -89,32 +110,45 @@ class ConnexionController extends AbstractController
             'erreur' => $errorState,
             'errorMessage' => $errorMessage
         ]);
-
-        // $user = new User();
-        // $user->setEmail("toto@gmail.com")
-        // ->setPassword("123")
-        // ->setPseudo("elToto")
-        // ->setNom("toto")
-        // ->setAge(22)
-        // ->setPrenom("tee")
-        // ->setVille("eee")
-        // ->setTel("099");
-
-        // $entityManager->persist($user);
-        // $entityManager->flush();
-
-        // return new Response('créer pour l'id : '.$user->getId());
     }
 
     /**
-     * @Route("/emailsend/{userEmail}", name="email_send")
+     * @Route("/emailsend", name="email_send")
      */
-    public function emailSend($userEmail): Response
+    public function emailSend(): Response
     {
+        $session = $this->requestStack->getSession();
+        $newUser = $session->get('newUser');
+        var_dump($session->get('newUser')->getEmail());
+        //faire attention que l'on ai pas de problème si on créer plusieurs user ( faut que ca écrase le précédent ) mais ca le fait peut etre de base en vrai jsp
         return $this->render('/connexion/emailsend.html.twig', [
-            'userEmail' => $userEmail,
+            'userEmail' => $newUser->getEmail(),
         ]);
     }
+
+    // /**
+    //  * @Route("/creation-user", name="email_send")
+    //  */
+    // public function createUser(): Response
+    // {
+    //     // $user = new User();
+    //     // $user->setEmail("toto@gmail.com")
+    //     // ->setPassword("123")
+    //     // ->setPseudo("elToto")
+    //     // ->setNom("toto")
+    //     // ->setAge(22)
+    //     // ->setPrenom("tee")
+    //     // ->setVille("eee")
+    //     // ->setTel("099");
+
+    //     // $entityManager->persist($user);
+    //     // $entityManager->flush();
+
+    //     // return new Response('créer pour l'id : '.$user->getId());
+    //     return $this->render('/connexion/success.html.twig', [
+    //         'userEmail' => 'yes',
+    //     ]);
+    // }
 
 
     // /**
