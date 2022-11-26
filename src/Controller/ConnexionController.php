@@ -27,7 +27,7 @@ class ConnexionController extends AbstractController
      */
     public function inscriptionUser(Request $request, ManagerRegistry $doctrine): Response
     {
-        
+
         $errorState = false;
         $errorMessage = "";
         $form = $this->createFormBuilder()
@@ -164,4 +164,18 @@ class ConnexionController extends AbstractController
     //     }
     //     return new Response('bien connecter '.$user->getEmail());
     // }
+
+    /**
+     * @Route("/discussions", name="discussion")
+     */
+    public function discussion(): Response
+    {
+        $discussion = [
+            'time' => '2h30',
+            'user' => 'Benois',
+            'firstLetter' => substr('Benois', 0, 1)
+        ];
+
+        return $this->render('/discussion/discussions.html.twig', ['discussion' => $discussion]);
+    }
 }

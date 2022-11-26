@@ -1,0 +1,46 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Discusions{% endblock %}
+
+{% block body %}
+<link href="{{ asset('css/Discussion.css') }}" rel="stylesheet"/>
+
+<h1>Discusions 1</h1>
+<div class="discussion_container">
+
+<a href="#sendMessage" class="sendMessageToRightButton primaryButton">Envoyer un message</a>
+
+<div class="discussion">
+<span class="first_letter {{discussion.firstLetter}}">{{discussion.firstLetter}}</span>
+    <span class="user_time">{{discussion.user}} : {{discussion.time}}</span>
+    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Consectetur commodi nulla mollitia assumenda est maxime doloremque deleniti deserunt facilis tenetur?</p>
+</div>
+<div class="discussion">
+<span class="first_letter {{discussion.firstLetter}}">{{discussion.firstLetter}}</span>
+    <span class="user_time">{{discussion.user}} : {{discussion.time}}</span>
+    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Consectetur commodi nulla mollitia assumenda est maxime doloremque deleniti deserunt facilis tenetur?</p>
+</div>
+<div class="discussion">
+<span class="first_letter {{discussion.firstLetter}}">{{discussion.firstLetter}}</span>
+    <span class="user_time">{{discussion.user}} : {{discussion.time}}</span>
+    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Consectetur commodi nulla mollitia assumenda est maxime doloremque deleniti deserunt facilis tenetur?</p>
+</div>
+<div class="discussion">
+<span class="first_letter {{discussion.firstLetter}}">{{discussion.firstLetter}}</span>
+    <span class="user_time">{{discussion.user}} : {{discussion.time}}</span>
+    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Consectetur commodi nulla mollitia assumenda est maxime doloremque deleniti deserunt facilis tenetur?</p>
+</div>
+
+<div class="input_container" id="sendMessage">
+<input type="text">
+<button>Envoyer</button></div>
+
+
+</div>
+
+
+
+
+
+{% endblock %}
+
